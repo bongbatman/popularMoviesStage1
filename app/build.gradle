@@ -8,7 +8,7 @@ android {
         javaMaxHeapSize "4g"
     }
     defaultConfig {
-        applicationId "com.example.android.nishantspopularmovies"
+        applicationId "com.example.android.popularmovies"
         minSdkVersion 18
         targetSdkVersion 25
         versionCode 1
