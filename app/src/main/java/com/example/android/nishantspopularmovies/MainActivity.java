@@ -1,15 +1,34 @@
 package com.example.android.nishantspopularmovies;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+
+import utils.JsonUtils;
+import utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity {
+
+    final static String SORT_POPULAR = "popular";
+    final static String SORT_TOP_RATED = "top_rated";
+    private static final String LOG_TAG = MainActivity.class.getSimpleName() ;
+    ArrayList<String> movieDbPosterList = null;
+
+    private TextView mJsonTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,10 +37,15 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        mJsonTextView = (TextView) findViewById(R.id.tv_url_display);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                URL builtUrl = NetworkUtils.buildUrl(SORT_POPULAR);
+                new FetchMovieDbTask().execute(builtUrl);
+
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -48,5 +72,38 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    class FetchMovieDbTask extends AsyncTask<URL, Void, String[]> {
+
+
+        @Override
+        protected String[] doInBackground(URL... params) {
+            String jsonStr = null;
+            String[] posterPathList = null;
+            try {
+                jsonStr = NetworkUtils.getResponseFromHttpUrl(params[0]);
+                posterPathList = JsonUtils.getMovieDetailStringsFromJson(jsonStr);
+//                movieDbPosterList = JsonUtils.getMovieDetailStringsFromJson(jsonStr);
+//                Log.d(LOG_TAG, "doInBackground: " + movieDbPosterList.get(0));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return posterPathList;
+
+        }
+
+        @Override
+        protected void onPostExecute(String[] s) {
+
+
+            for (String posterList : s
+                 ) {
+
+                mJsonTextView.append(posterList + "\n\n\n");
+            }
+
+        }
     }
 }
