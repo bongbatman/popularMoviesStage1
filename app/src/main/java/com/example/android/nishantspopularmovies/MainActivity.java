@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -12,12 +14,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import data.MovieDbAdapter;
 import utils.JsonUtils;
 import utils.NetworkUtils;
 
@@ -30,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mJsonTextView;
 
+    private MovieDbAdapter mAdapter;
+    private RecyclerView mRecyclerView;
+    private String[] mPosterList;
+    private int listItemCount;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +42,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mJsonTextView = (TextView) findViewById(R.id.tv_url_display);
+        mPosterList = new String[2];
+        mPosterList[0] = "Dummy data item 1";
+        mPosterList[1] = "Dummy data item 2";
+
+
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movieposter);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(llm);
+        mRecyclerView.setHasFixedSize(true);
+
+
+        mAdapter = new MovieDbAdapter(2, mPosterList);
+        mRecyclerView.setAdapter(mAdapter);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -97,12 +116,17 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String[] s) {
 
+            listItemCount = s.length;
+            mAdapter = new MovieDbAdapter(listItemCount, s);
 
-            for (String posterList : s
-                 ) {
+            mRecyclerView.setAdapter(mAdapter);
+            Log.d(LOG_TAG, "onPostExecute: " + "String array length = " + listItemCount);
 
-                mJsonTextView.append(posterList + "\n\n\n");
-            }
+//            for (String posterList : s
+//                 ) {
+//
+//               mPosterList = posterList;
+//            }
 
         }
     }
