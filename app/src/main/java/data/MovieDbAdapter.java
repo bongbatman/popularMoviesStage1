@@ -1,7 +1,9 @@
 package data;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +11,13 @@ import android.widget.TextView;
 
 import com.example.android.nishantspopularmovies.R;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.zip.Inflater;
+
+import utils.NetworkUtils;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Nishant on 24-03-2017.
@@ -17,12 +25,19 @@ import java.util.zip.Inflater;
 
 public class MovieDbAdapter extends RecyclerView.Adapter<MovieDbAdapter.MovieDbViewHolder> {
 
+    private static final String LOG_TAG = MovieDbAdapter.class.getSimpleName() ;
     private static String[] posterUrl;
     private static int itemCount;
+    final private ListItemClickListener mOnClickListener;
 
-    public MovieDbAdapter(int itemCount, String[] moivePoserUrlList) {
+
+
+    public MovieDbAdapter(int itemCount, String[] moivePoserUrlList, ListItemClickListener clickListener) {
         this.itemCount = itemCount;
         this.posterUrl = moivePoserUrlList;
+        mOnClickListener = clickListener;
+        notifyDataSetChanged();
+
     }
 
     @Override
@@ -45,11 +60,23 @@ public class MovieDbAdapter extends RecyclerView.Adapter<MovieDbAdapter.MovieDbV
     @Override
     public void onBindViewHolder(MovieDbViewHolder holder, int position) {
 
+        String requiredUrl = null;
+
+        try {
+           requiredUrl = String.valueOf(NetworkUtils.generatePosterUrl(posterUrl[position]));
+            Log.d(LOG_TAG, "onBindViewHolder: " + "Formed Movie URls = " + requiredUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
 
 
-
-        holder.bind(posterUrl[position]);
+        holder.bind(requiredUrl);
     }
+
+    public interface ListItemClickListener {
+        void onListItemClick(int clickedItemIndex);
+    }
+
 
 
     @Override
@@ -57,7 +84,9 @@ public class MovieDbAdapter extends RecyclerView.Adapter<MovieDbAdapter.MovieDbV
         return itemCount;
     }
 
-   class MovieDbViewHolder extends RecyclerView.ViewHolder {
+
+
+   class MovieDbViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
 
         private TextView mMoviePosterUrlTextView;
@@ -66,6 +95,7 @@ public class MovieDbAdapter extends RecyclerView.Adapter<MovieDbAdapter.MovieDbV
             super(itemView);
 
             mMoviePosterUrlTextView = (TextView) itemView.findViewById(R.id.tv_movieposter_url);
+            itemView.setOnClickListener(this);
 
         }
 
@@ -73,7 +103,14 @@ public class MovieDbAdapter extends RecyclerView.Adapter<MovieDbAdapter.MovieDbV
             mMoviePosterUrlTextView.setText(listIndex);
         }
 
-    }
+       @Override
+       public void onClick(View v) {
+           int clickedPosition = getAdapterPosition();
+           mOnClickListener.onListItemClick(clickedPosition);
+       }
+   }
+
+
 
 
 

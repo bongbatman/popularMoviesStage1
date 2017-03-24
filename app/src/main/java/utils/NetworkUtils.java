@@ -23,10 +23,12 @@ public class NetworkUtils {
 
     final static String PARAM_QUERY = "api_key";
     final static String MOVIEDB_API_KEY = "b410a107f37009673dc9a65d75f317b3";
+    private static final String BASE_POSTER_URL = "http://image.tmdb.org/t/p";
+    private static final String PATH_POSTER_SIZE = "w185";
 
 
 
-    public static URL buildUrl(String movieDbQuerySortPrefrence) {
+    public static URL generateApiUrlForMovieDb(String movieDbQuerySortPrefrence) {
         Uri builtUri = Uri.parse(MOVIEDB_BASE_URL).buildUpon()
                 .appendPath(movieDbQuerySortPrefrence)
                 .appendQueryParameter(PARAM_QUERY, MOVIEDB_API_KEY)
@@ -41,8 +43,20 @@ public class NetworkUtils {
             e.printStackTrace();
         }
 
-        Log.d(LOG_TAG, "buildUrl: " + url);
+        Log.d(LOG_TAG, "generateApiUrlForMovieDb: " + url);
         return url;
+    }
+
+    public static URL generatePosterUrl (String posterPath) throws MalformedURLException {
+        Uri posterUri = Uri.parse(BASE_POSTER_URL).buildUpon()
+                .appendPath(PATH_POSTER_SIZE)
+                .appendEncodedPath(posterPath)
+                .build();
+        URL builtPosterUrl;
+        builtPosterUrl = new URL(posterUri.toString());
+
+        return builtPosterUrl;
+
     }
 
 

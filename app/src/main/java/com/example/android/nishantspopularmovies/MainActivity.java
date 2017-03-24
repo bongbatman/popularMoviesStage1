@@ -1,5 +1,6 @@
 package com.example.android.nishantspopularmovies;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -13,6 +14,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.android.popularmovies.DetailsActivity;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -21,11 +25,13 @@ import data.MovieDbAdapter;
 import utils.JsonUtils;
 import utils.NetworkUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieDbAdapter.ListItemClickListener {
 
     final static String SORT_POPULAR = "popular";
     final static String SORT_TOP_RATED = "top_rated";
     private static final String LOG_TAG = MainActivity.class.getSimpleName() ;
+    public static final String CLICKED_ITEM_INDEX = "clicked_item_index" ;
+    public static final String MOVIE_POSTER_PATH = "movie_poster_path" ;
     ArrayList<String> movieDbPosterList = null;
 
     private TextView mJsonTextView;
@@ -54,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
 
 
-        mAdapter = new MovieDbAdapter(2, mPosterList);
+        mAdapter = new MovieDbAdapter(2, mPosterList, this);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -62,13 +68,21 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                URL builtUrl = NetworkUtils.buildUrl(SORT_POPULAR);
+                URL builtUrl = NetworkUtils.generateApiUrlForMovieDb(SORT_POPULAR);
                 new FetchMovieDbTask().execute(builtUrl);
 
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    private void refershRecyclerView(String[] s)  {
+        mPosterList = s;
+        mAdapter = new MovieDbAdapter(listItemCount, s, this);
+
+        mRecyclerView.setAdapter(mAdapter);
+        Log.d(LOG_TAG, "onPostExecute: " + "String array length = " + listItemCount);
     }
 
     @Override
@@ -91,6 +105,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        Toast.makeText(this, "Clicked Item = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, DetailsActivity.class);
+        intent.putExtra(CLICKED_ITEM_INDEX, clickedItemIndex);
+        intent.putExtra(MOVIE_POSTER_PATH, mPosterList[clickedItemIndex]);
+        startActivity(intent);
     }
 
     class FetchMovieDbTask extends AsyncTask<URL, Void, String[]> {
@@ -117,10 +140,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String[] s) {
 
             listItemCount = s.length;
-            mAdapter = new MovieDbAdapter(listItemCount, s);
-
-            mRecyclerView.setAdapter(mAdapter);
-            Log.d(LOG_TAG, "onPostExecute: " + "String array length = " + listItemCount);
+            refershRecyclerView(s);
 
 //            for (String posterList : s
 //                 ) {
@@ -129,5 +149,15 @@ public class MainActivity extends AppCompatActivity {
 //            }
 
         }
+
+
+
+//        @Override
+//        public void onListItemClick(int clickedItemIndex) {
+//            Toast.makeText(getApplicationContext(), "Clicked from asyncTask " + clickedItemIndex, Toast.LENGTH_SHORT).show();
+//        }
+
     }
+
+
 }
