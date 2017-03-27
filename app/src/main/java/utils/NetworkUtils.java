@@ -24,7 +24,7 @@ public class NetworkUtils {
     final static String PARAM_QUERY = "api_key";
     final static String MOVIEDB_API_KEY = "b410a107f37009673dc9a65d75f317b3";
     private static final String BASE_POSTER_URL = "http://image.tmdb.org/t/p";
-    private static final String PATH_POSTER_SIZE = "w185";
+    private static final String PATH_POSTER_SIZE = "w780";
 
 
 

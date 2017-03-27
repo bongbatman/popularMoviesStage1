@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="?attr/selectableItemBackground"
     android:clickable="true">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_movieposter_url"
-        tools:text="Test"
-        android:textSize="24sp"
-        android:padding="16dp"
-        android:layout_gravity="center|start"
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:scaleType="centerCrop"
+        android:id="@+id/iv_movie_poster"
+        android:src="@drawable/test"
+        android:paddingBottom="4dp"
         />
 
 </LinearLayout>

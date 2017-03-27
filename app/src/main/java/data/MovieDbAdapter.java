@@ -1,23 +1,19 @@
 package data;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.example.android.nishantspopularmovies.R;
+import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.zip.Inflater;
 
 import utils.NetworkUtils;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by Nishant on 24-03-2017.
@@ -26,16 +22,19 @@ import static android.content.ContentValues.TAG;
 public class MovieDbAdapter extends RecyclerView.Adapter<MovieDbAdapter.MovieDbViewHolder> {
 
     private static final String LOG_TAG = MovieDbAdapter.class.getSimpleName() ;
-    private static String[] posterUrl;
+    private static String[] movieIdList;
     private static int itemCount;
     final private ListItemClickListener mOnClickListener;
+    final private Context mContext;
 
 
 
-    public MovieDbAdapter(int itemCount, String[] moivePoserUrlList, ListItemClickListener clickListener) {
+
+    public MovieDbAdapter(int itemCount, String[] moivePoserUrlList, ListItemClickListener clickListener, Context context) {
         this.itemCount = itemCount;
-        this.posterUrl = moivePoserUrlList;
+        this.movieIdList = moivePoserUrlList;
         mOnClickListener = clickListener;
+        this.mContext = context;
         notifyDataSetChanged();
 
     }
@@ -63,14 +62,14 @@ public class MovieDbAdapter extends RecyclerView.Adapter<MovieDbAdapter.MovieDbV
         String requiredUrl = null;
 
         try {
-           requiredUrl = String.valueOf(NetworkUtils.generatePosterUrl(posterUrl[position]));
+           requiredUrl = String.valueOf(NetworkUtils.generatePosterUrl(movieIdList[position]));
             Log.d(LOG_TAG, "onBindViewHolder: " + "Formed Movie URls = " + requiredUrl);
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
 
 
-        holder.bind(requiredUrl);
+        holder.bind(requiredUrl, requiredUrl);
     }
 
     public interface ListItemClickListener {
@@ -89,18 +88,23 @@ public class MovieDbAdapter extends RecyclerView.Adapter<MovieDbAdapter.MovieDbV
    class MovieDbViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
 
-        private TextView mMoviePosterUrlTextView;
+
+        private ImageView mImageView;
 
         public MovieDbViewHolder(View itemView) {
             super(itemView);
 
-            mMoviePosterUrlTextView = (TextView) itemView.findViewById(R.id.tv_movieposter_url);
+
+            mImageView = (ImageView) itemView.findViewById(R.id.iv_movie_poster);
             itemView.setOnClickListener(this);
 
         }
 
-        void bind (String listIndex){
-            mMoviePosterUrlTextView.setText(listIndex);
+        void bind (String listIndex, String imageUrl){
+
+            
+
+            Picasso.with(mContext).load(imageUrl).into(mImageView);
         }
 
        @Override

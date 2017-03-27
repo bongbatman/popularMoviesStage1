@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
     private String[] mPosterList;
     private int listItemCount;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +58,12 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_movieposter);
         LinearLayoutManager llm = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(llm);
+        GridLayoutManager glm = new GridLayoutManager(this, 2);
+        mRecyclerView.setLayoutManager(glm);
         mRecyclerView.setHasFixedSize(true);
 
 
-        mAdapter = new MovieDbAdapter(2, mPosterList, this);
+        mAdapter = new MovieDbAdapter(2, mPosterList, this, this);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -79,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
 
     private void refershRecyclerView(String[] s)  {
         mPosterList = s;
-        mAdapter = new MovieDbAdapter(listItemCount, s, this);
+        mAdapter = new MovieDbAdapter(listItemCount, s, this, this);
 
         mRecyclerView.setAdapter(mAdapter);
         Log.d(LOG_TAG, "onPostExecute: " + "String array length = " + listItemCount);
