@@ -39,7 +39,12 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
 
     private MovieDbAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    private String[] mPosterList;
+    private String[] mPosterPathList;
+    static String[] mMovieOriginalTitleList;
+    static String[] mMovieOverviewList;
+    static String[] mMovieIdList;
+    static String[] mUserRatingList;
+    static String[] mReleaseDateList;
     private int listItemCount;
 
 
@@ -50,9 +55,9 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mPosterList = new String[2];
-        mPosterList[0] = "Dummy data item 1";
-        mPosterList[1] = "Dummy data item 2";
+        mPosterPathList = new String[2];
+        mPosterPathList[0] = "Dummy data item 1";
+        mPosterPathList[1] = "Dummy data item 2";
 
 
 
@@ -63,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
         mRecyclerView.setHasFixedSize(true);
 
 
-        mAdapter = new MovieDbAdapter(2, mPosterList, this, this);
+        mAdapter = new MovieDbAdapter(2, mPosterPathList, this, this);
         mRecyclerView.setAdapter(mAdapter);
 
 
@@ -81,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
     }
 
     private void refershRecyclerView(String[] s)  {
-        mPosterList = s;
+        mPosterPathList = s;
         mAdapter = new MovieDbAdapter(listItemCount, s, this, this);
 
         mRecyclerView.setAdapter(mAdapter);
@@ -115,7 +120,11 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
         Toast.makeText(this, "Clicked Item = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(CLICKED_ITEM_INDEX, clickedItemIndex);
-        intent.putExtra(MOVIE_POSTER_PATH, mPosterList[clickedItemIndex]);
+        intent.putExtra(MOVIE_POSTER_PATH, mPosterPathList[clickedItemIndex]);
+        intent.putExtra(JsonUtils.DB_RELEASE_DATE, mReleaseDateList[clickedItemIndex]);
+        intent.putExtra(JsonUtils.DB_USER_RATING, mUserRatingList[clickedItemIndex]);
+        intent.putExtra(JsonUtils.DB_ORIGINAL_TITLE, mMovieOriginalTitleList[clickedItemIndex]);
+        intent.putExtra(JsonUtils.DB_OVERVIEW, mMovieOverviewList[clickedItemIndex]);
         startActivity(intent);
     }
 
@@ -128,8 +137,13 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
             String[] posterPathList = null;
             try {
                 jsonStr = NetworkUtils.getResponseFromHttpUrl(params[0]);
-                posterPathList = JsonUtils.getMovieDetailStringsFromJson(jsonStr);
-//                movieDbPosterList = JsonUtils.getMovieDetailStringsFromJson(jsonStr);
+                posterPathList = JsonUtils.getMoviePosterPathFromJson(jsonStr);
+                mMovieOriginalTitleList = JsonUtils.getMovieOriginalTitleFromJson(jsonStr);
+                mMovieIdList = JsonUtils.getMovieIdFromJson(jsonStr);
+                mReleaseDateList = JsonUtils.getMovieReleaseDateFromJson(jsonStr);
+                mUserRatingList = JsonUtils.getMovieUserRatingFromJson(jsonStr);
+                mMovieOverviewList = JsonUtils.getMovieOverviewFromJson(jsonStr);
+//                movieDbPosterList = JsonUtils.getMoviePosterPathFromJson(jsonStr);
 //                Log.d(LOG_TAG, "doInBackground: " + movieDbPosterList.get(0));
             } catch (Exception e) {
                 e.printStackTrace();
@@ -148,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
 //            for (String posterList : s
 //                 ) {
 //
-//               mPosterList = posterList;
+//               mPosterPathList = posterList;
 //            }
 
         }

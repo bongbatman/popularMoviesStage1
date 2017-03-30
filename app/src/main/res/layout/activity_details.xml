@@ -1,16 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+<LinearLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.android.popularmovies.DetailsActivity">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/tv_details_activity"
-        android:textSize="20sp"
-        android:padding="16dp"
-        android:text="TEST"/>
 
-</FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_movie_original_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="32dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="32dp"
+        android:text="TEST"
+        android:textSize="48sp"
+        android:background="@color/colorAccent"
+        android:textColor="#ffffff"
+        android:elevation="2dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_movie_poster_details_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:src="@drawable/test" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingTop="16dp"
+            android:paddingRight="16dp">
+
+            <TextView
+                android:id="@+id/tv_movie_release_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-thin"
+
+
+                android:text="release date"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/tv_movie_user_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User Rating" />
+        </LinearLayout>
+
+    </LinearLayout><TextView
+    android:paddingLeft="16dp"
+    android:fontFamily="monospace"
+    android:id="@+id/tv_movie_overview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Overview"/>
+
+
+
+
+</LinearLayout>
+</ScrollView>
