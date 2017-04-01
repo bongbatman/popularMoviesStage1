@@ -1,4 +1,4 @@
-package com.example.android.nishantspopularmovies;
+package com.example.android.popularmovies;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

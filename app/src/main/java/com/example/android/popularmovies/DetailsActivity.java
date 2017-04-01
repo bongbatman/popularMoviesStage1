@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.android.nishantspopularmovies.MainActivity;
-import com.example.android.nishantspopularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
@@ -27,6 +25,7 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        setTitle("Movie Details");
         
 
         mMovieOriginalTitleTextView = (TextView) findViewById(R.id.tv_movie_original_title);
@@ -54,10 +53,10 @@ public class DetailsActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            Picasso.with(this).load(fullPosterUrl).resize(500,680).centerInside().into(mMoviePosterImageView);
+            Picasso.with(this).load(fullPosterUrl).into(mMoviePosterImageView);
             mMovieOriginalTitleTextView.setText(originalTitle);
             mMovieReleaseDate.setText(releaseDate);
-            mMovieUserRating.setText(userRating+"/10");
+            mMovieUserRating.setText(String.format("%s"+getString(R.string.maximum_rating_possible), userRating));
             mMovieOverview.setText(overview);
         }
 

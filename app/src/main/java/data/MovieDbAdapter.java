@@ -2,13 +2,12 @@ package data;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.example.android.nishantspopularmovies.R;
+import com.example.android.popularmovies.R;
 import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
@@ -63,7 +62,7 @@ public class MovieDbAdapter extends RecyclerView.Adapter<MovieDbAdapter.MovieDbV
 
         try {
            requiredUrl = String.valueOf(NetworkUtils.generatePosterUrl(movieIdList[position]));
-            Log.d(LOG_TAG, "onBindViewHolder: " + "Formed Movie URls = " + requiredUrl);
+
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
@@ -78,10 +77,16 @@ public class MovieDbAdapter extends RecyclerView.Adapter<MovieDbAdapter.MovieDbV
 
 
 
+
+
+
+
     @Override
     public int getItemCount() {
         return itemCount;
     }
+
+
 
 
 

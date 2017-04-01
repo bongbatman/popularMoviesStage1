@@ -22,7 +22,7 @@ public class NetworkUtils {
             "https://api.themoviedb.org/3/movie";
 
     final static String PARAM_QUERY = "api_key";
-    final static String MOVIEDB_API_KEY = "b410a107f37009673dc9a65d75f317b3";
+    final static String MOVIEDB_API_KEY = "enter_api_key_here";
     private static final String BASE_POSTER_URL = "http://image.tmdb.org/t/p";
     private static final String PATH_POSTER_SIZE = "w780";
 
@@ -43,7 +43,7 @@ public class NetworkUtils {
             e.printStackTrace();
         }
 
-        Log.d(LOG_TAG, "generateApiUrlForMovieDb: " + url);
+
         return url;
     }
 
@@ -72,7 +72,7 @@ public class NetworkUtils {
             boolean hasInput = scanner.hasNext();
             if (hasInput) {
                 String jsonStr = scanner.next();
-                Log.d(LOG_TAG, "getResponseFromHttpUrl: " + jsonStr);
+
                 return jsonStr;
             } else {
                 return null;

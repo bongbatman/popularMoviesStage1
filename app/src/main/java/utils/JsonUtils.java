@@ -6,8 +6,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Nishant on 23-03-2017.
@@ -67,7 +65,7 @@ public class JsonUtils {
             posterPathList[i] = mPosterPath;
 
 
-            Log.d(LOG_TAG, "getMoviePosterPathFromJson: " + posterPathList[i]);
+
 
 
         }
@@ -101,7 +99,6 @@ public class JsonUtils {
             movieIdList[i] = mMovieId;
 
 
-            Log.d(LOG_TAG, "getMoviePosterPathFromJson: " + movieIdList[i]);
 
 
         }
@@ -134,7 +131,7 @@ public class JsonUtils {
             movieOverviewList[i] = mMovieOverview;
 
 
-            Log.d(LOG_TAG, "getMoviePosterPathFromJson: " + movieOverviewList[i]);
+
 
 
         }
@@ -167,7 +164,7 @@ public class JsonUtils {
             movieOriginalTitleList[i] = mMovieOriginalTitle;
 
 
-            Log.d(LOG_TAG, "getMoviePosterPathFromJson: " + movieOriginalTitleList[i]);
+
 
 
         }
@@ -200,7 +197,7 @@ public class JsonUtils {
             movieUserRatingList[i] = mUserRating;
 
 
-            Log.d(LOG_TAG, "getMoviePosterPathFromJson: " + movieUserRatingList[i]);
+
 
 
         }
@@ -233,7 +230,7 @@ public class JsonUtils {
             movieReleaseDateList[i] = mReleaseDate;
 
 
-            Log.d(LOG_TAG, "getMoviePosterPathFromJson: " + movieReleaseDateList[i]);
+
 
 
         }

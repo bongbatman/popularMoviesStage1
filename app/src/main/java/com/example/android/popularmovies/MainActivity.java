@@ -1,27 +1,22 @@
-package com.example.android.nishantspopularmovies;
+package com.example.android.popularmovies;
 
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
+
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.android.popularmovies.DetailsActivity;
 
 import java.net.URL;
-import java.util.ArrayList;
+
 
 import data.MovieDbAdapter;
 import utils.JsonUtils;
@@ -31,12 +26,11 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
 
     final static String SORT_POPULAR = "popular";
     final static String SORT_TOP_RATED = "top_rated";
-    private static final String LOG_TAG = MainActivity.class.getSimpleName() ;
+
     public static final String CLICKED_ITEM_INDEX = "clicked_item_index" ;
     public static final String MOVIE_POSTER_PATH = "movie_poster_path" ;
-    ArrayList<String> movieDbPosterList = null;
 
-    private TextView mJsonTextView;
+
 
     private MovieDbAdapter mAdapter;
     private RecyclerView mRecyclerView;
@@ -60,6 +54,13 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movieposter);
+
+        GridLayoutManager glm = new GridLayoutManager(this, 2);
+        mRecyclerView.setLayoutManager(glm);
+        mRecyclerView.setHasFixedSize(true);
+
+
 
         mPosterPathList = new String[2];
         mPosterPathList[0] = "Dummy data item 1";
@@ -70,11 +71,6 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
 
 
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_movieposter);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        GridLayoutManager glm = new GridLayoutManager(this, 2);
-        mRecyclerView.setLayoutManager(glm);
-        mRecyclerView.setHasFixedSize(true);
 
 
         mAdapter = new MovieDbAdapter(2, mPosterPathList, this, this);
@@ -82,8 +78,6 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
         mRecyclerView.setItemViewCacheSize(10);
 
         mRecyclerView.setDrawingCacheEnabled(true);
-//        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
-
 
 
 
@@ -93,14 +87,18 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
 
 
 
+
     }
 
-    private void refershRecyclerView(String[] s)  {
+
+
+
+    private void refreshRecyclerView(String[] s)  {
         mPosterPathList = s;
         mAdapter = new MovieDbAdapter(listItemCount, s, this, this);
 
         mRecyclerView.setAdapter(mAdapter);
-        Log.d(LOG_TAG, "onPostExecute: " + "String array length = " + listItemCount);
+
     }
 
     private void showdata() {
@@ -132,13 +130,13 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
             case R.id.action_popular:
 
                 new FetchMovieDbTask().execute(builtUrlForPopular);
-                Log.d(LOG_TAG, "onOptionsItemSelected: Popular " + builtUrlForPopular.toString());
+
                 return true;
 
             case R.id.action_top_rated:
 
                 new FetchMovieDbTask().execute(builtUrlForTopRated);
-                Log.d(LOG_TAG, "onOptionsItemSelected: Top Rated "+ builtUrlForTopRated.toString());
+
                 return true;
 
                 default:
@@ -148,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        Toast.makeText(this, "Clicked Item = " + clickedItemIndex, Toast.LENGTH_SHORT).show();
+
         Intent intent = new Intent(this, DetailsActivity.class);
         intent.putExtra(CLICKED_ITEM_INDEX, clickedItemIndex);
         intent.putExtra(MOVIE_POSTER_PATH, mPosterPathList[clickedItemIndex]);
@@ -178,8 +176,7 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
                 mReleaseDateList = JsonUtils.getMovieReleaseDateFromJson(jsonStr);
                 mUserRatingList = JsonUtils.getMovieUserRatingFromJson(jsonStr);
                 mMovieOverviewList = JsonUtils.getMovieOverviewFromJson(jsonStr);
-//                movieDbPosterList = JsonUtils.getMoviePosterPathFromJson(jsonStr);
-//                Log.d(LOG_TAG, "doInBackground: " + movieDbPosterList.get(0));
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -187,6 +184,8 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
             return posterPathList;
 
         }
+
+
 
         @Override
         protected void onPostExecute(String[] s) {
@@ -198,23 +197,15 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
             }else{
                 listItemCount = s.length;
                 showdata();
-                refershRecyclerView(s);
+                refreshRecyclerView(s);
             }
 
-//            for (String posterList : s
-//                 ) {
-//
-//               mPosterPathList = posterList;
-//            }
+
 
         }
 
 
 
-//        @Override
-//        public void onListItemClick(int clickedItemIndex) {
-//            Toast.makeText(getApplicationContext(), "Clicked from asyncTask " + clickedItemIndex, Toast.LENGTH_SHORT).show();
-//        }
 
     }
 
