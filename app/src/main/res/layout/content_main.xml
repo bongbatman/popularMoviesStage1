@@ -15,6 +15,22 @@
         android:layout_height="match_parent"
         android:id="@+id/rv_movieposter"
         />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_error"
+        android:textSize="20sp"
+        android:paddingTop="16dp"
+        android:text="An error occurred. Try again later."
+        android:layout_gravity="center_horizontal"
+        android:visibility="invisible"/>
+    <ProgressBar
+        android:id="@+id/pb_main_activity"
+        android:visibility="invisible"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="16dp"/>
 
 
 </FrameLayout>

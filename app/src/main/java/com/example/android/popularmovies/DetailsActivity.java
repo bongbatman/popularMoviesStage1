@@ -27,6 +27,8 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        
+
         mMovieOriginalTitleTextView = (TextView) findViewById(R.id.tv_movie_original_title);
         mMovieReleaseDate = (TextView) findViewById(R.id.tv_movie_release_date);
         mMoviePosterImageView = (ImageView) findViewById(R.id.iv_movie_poster_details_activity);

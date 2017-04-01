@@ -67,7 +67,9 @@
     android:id="@+id/tv_movie_overview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="Overview"/>
+    android:text="Overview"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp"/>
 
 
 

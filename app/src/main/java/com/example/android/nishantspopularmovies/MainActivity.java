@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,11 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
     static String[] mReleaseDateList;
     private int listItemCount;
 
+    TextView mErrorTextView;
+    ProgressBar mLoadBar;
+    URL builtUrlForPopular;
+    URL builtUrlForTopRated;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
         mPosterPathList[0] = "Dummy data item 1";
         mPosterPathList[1] = "Dummy data item 2";
 
+        mLoadBar = (ProgressBar) findViewById(R.id.pb_main_activity);
+        mErrorTextView = (TextView) findViewById(R.id.tv_error);
+
 
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_movieposter);
@@ -70,19 +79,20 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
 
         mAdapter = new MovieDbAdapter(2, mPosterPathList, this, this);
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setItemViewCacheSize(10);
+
+        mRecyclerView.setDrawingCacheEnabled(true);
+//        mRecyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                URL builtUrl = NetworkUtils.generateApiUrlForMovieDb(SORT_POPULAR);
-                new FetchMovieDbTask().execute(builtUrl);
 
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+        builtUrlForPopular = NetworkUtils.generateApiUrlForMovieDb(SORT_POPULAR);
+        builtUrlForTopRated = NetworkUtils.generateApiUrlForMovieDb(SORT_TOP_RATED);
+        new FetchMovieDbTask().execute(builtUrlForPopular);
+
+
+
     }
 
     private void refershRecyclerView(String[] s)  {
@@ -92,6 +102,17 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
         mRecyclerView.setAdapter(mAdapter);
         Log.d(LOG_TAG, "onPostExecute: " + "String array length = " + listItemCount);
     }
+
+    private void showdata() {
+        mErrorTextView.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideData(){
+        mErrorTextView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -107,12 +128,22 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        switch (id){
+            case R.id.action_popular:
 
-        return super.onOptionsItemSelected(item);
+                new FetchMovieDbTask().execute(builtUrlForPopular);
+                Log.d(LOG_TAG, "onOptionsItemSelected: Popular " + builtUrlForPopular.toString());
+                return true;
+
+            case R.id.action_top_rated:
+
+                new FetchMovieDbTask().execute(builtUrlForTopRated);
+                Log.d(LOG_TAG, "onOptionsItemSelected: Top Rated "+ builtUrlForTopRated.toString());
+                return true;
+
+                default:
+                    return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override
@@ -130,6 +161,10 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
 
     class FetchMovieDbTask extends AsyncTask<URL, Void, String[]> {
 
+        @Override
+        protected void onPreExecute() {
+            mLoadBar.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected String[] doInBackground(URL... params) {
@@ -156,8 +191,15 @@ public class MainActivity extends AppCompatActivity implements MovieDbAdapter.Li
         @Override
         protected void onPostExecute(String[] s) {
 
-            listItemCount = s.length;
-            refershRecyclerView(s);
+            mLoadBar.setVisibility(View.INVISIBLE);
+
+            if (s == null) {
+                hideData();
+            }else{
+                listItemCount = s.length;
+                showdata();
+                refershRecyclerView(s);
+            }
 
 //            for (String posterList : s
 //                 ) {
